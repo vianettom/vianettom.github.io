@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Connectiv Map</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 400px;
+        height: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoidG9tZW5nZWxzbWFuIiwiYSI6ImNsMTJ5eDlwdDA0ZHczYm9qYWg3aHB0aGcifQ.YHoERoLEgDsuNZ-bX6Nuzg";
+      const map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/tomengelsman/cl1550dm5001c14s088efjspw",
+        center: [-115.16658045411894, 36.1185616118664], // Must be Longitude/Latitude; google maps uses the opposite format: latitude, Longitude.
+        zoom: 15,
+      });
+
+      map.on("load", () => {
+        // Add an image to use as a custom marker
+        map.loadImage(
+          "https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png",
+          (error, image) => {
+            if (error) throw error;
+            map.addImage("custom-marker", image);
+            // Add a GeoJSON source with 2 points
+            map.addSource("points", {
+              type: "geojson",
+              data: {
+                type: "FeatureCollection",
+                features: [
+                  {
+                    // feature 1
+                    type: "Feature",
+                    geometry: {
+                      type: "Point",
+                      coordinates: [-115.1655702858476, 36.11874604412837], // Must be Longitude/Latitude; google maps uses the opposite format: latitude, Longitude.
+                    },
+                    properties: {
+                      title: "Caesars Forum",
+                    },
+                  },
+
+                  {
+                    // feature 2
+                    type: "Feature",
+                    geometry: {
+                      type: "Point",
+                      coordinates: [-115.17451376764002, 36.11626318477786],
+                    },
+                    properties: {
+                      title: "Caesars Palace",
+                    },
+                  },
+
+                  {
+                    // feature 3
+                    type: "Feature",
+                    geometry: {
+                      type: "Point",
+                      coordinates: [-115.17079630196442, 36.119777546288354],
+                    },
+                    properties: {
+                      title: "Harrah's Las Vegas",
+                    },
+                  },
+
+                  {
+                    // feature 4
+                    type: "Feature",
+                    geometry: {
+                      type: "Point",
+                      coordinates: [-115.17240444186703, 36.11503886102851],
+                    },
+                    properties: {
+                      title: "The Cromwell",
+                    },
+                  },
+                ],
+              },
+            });
+
+            // Add a symbol layer
+            map.addLayer({
+              id: "points",
+              type: "symbol",
+              source: "points",
+              layout: {
+                "icon-image": "custom-marker",
+                // get the title name from the source's "title" property
+                "text-field": ["get", "title"],
+                "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                "text-offset": [0, 1.25],
+                "text-anchor": "top",
+                "icon-allow-overlap": true,
+              },
+            });
+          }
+        );
+      });
+    </script>
+  </body>
+</html>
